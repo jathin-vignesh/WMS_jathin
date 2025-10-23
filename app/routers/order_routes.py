@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from db import get_db
 from schemas.order_schema import OrderCreate, OrderResponse, UpdateOrderStatus
-from services.order_service import create_order, list_orders, update_order_status
+from services.order_service import create_order, list_orders, update_order_status,list_shipped_orders
 from services.shipment_service import trigger_shipment
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
@@ -30,3 +30,10 @@ def ship_order(id: int, db: Session = Depends(get_db)):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
+
+@router.get("/shipped", response_model=List[OrderResponse])
+def get_shipped_orders(db: Session = Depends(get_db)):
+    orders = list_shipped_orders(db)
+    if not orders:
+        raise HTTPException(status_code=404, detail="No shipped orders found")
+    return orders

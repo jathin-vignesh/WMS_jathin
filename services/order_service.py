@@ -59,7 +59,7 @@ def create_order(db: Session, order_data: OrderCreate):
     db.refresh(order)
     return order
 def list_orders(db: Session):
-    return db.query(Order).all()
+    return db.query(Order).filter(Order.status!="Shipment started").all()
 
 def update_order_status(db: Session, order_id: int, status: str):
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -68,3 +68,6 @@ def update_order_status(db: Session, order_id: int, status: str):
         db.commit()
         db.refresh(order)
     return order
+
+def list_shipped_orders(db: Session):
+    return db.query(Order).filter(Order.status == "Shipment started").all()
