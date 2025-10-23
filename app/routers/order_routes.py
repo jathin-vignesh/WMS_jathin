@@ -11,8 +11,6 @@ router = APIRouter(prefix="/orders", tags=["Orders"])
 @router.post("/", response_model=OrderResponse)
 def create_new_order(order_data: OrderCreate, db: Session = Depends(get_db)):
     order = create_order(db, order_data)
-    # Integration with inventory microservice (example)
-    # requests.post("http://inventory-service/api/reduce_stock", json={...})
     return order
 
 @router.get("/", response_model=List[OrderResponse])
