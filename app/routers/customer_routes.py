@@ -1,19 +1,16 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from db import get_db
-from models.customer_model import Customer
 from schemas.customer_schema import CustomerCreate, CustomerResponse
 from typing import List
+from services.customer_service import create_customer_service
+from models.customer_model import Customer
 
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
-@router.post("/", response_model=CustomerResponse)
+@router.post("/", response_model=CustomerResponse | dict)
 def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)):
-    new_customer = Customer(**customer.dict())
-    db.add(new_customer)
-    db.commit()
-    db.refresh(new_customer)
-    return new_customer
+    return create_customer_service(customer, db)
 
 @router.get("/", response_model=List[CustomerResponse])
 def get_customers(db: Session = Depends(get_db)):

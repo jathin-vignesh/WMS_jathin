@@ -4,7 +4,7 @@ from typing import List
 from db import get_db
 from schemas.order_schema import OrderCreate, OrderResponse, UpdateOrderStatus
 from services.order_service import create_order, list_orders, update_order_status,list_shipped_orders
-from services.shipment_service import trigger_shipment
+from services.order_service import trigger_shipment
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
